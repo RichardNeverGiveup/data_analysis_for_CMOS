@@ -19,7 +19,7 @@ def Get_Length(column):
     length = li[-1]
     return length
 
-'''废弃函数，没办法实现
+'''
 import re
 def Get_Size(tittle):
 

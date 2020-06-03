@@ -104,7 +104,7 @@ def linear_interpolation(final):
     Vg_target
     return Vg_target
 
- if __name__ == '__main__':
+if __name__ == '__main__':
     
     workingDir = os.path.abspath(r'JP\A9A5202#03') # 读取的目录
     exportDir = os.path.abspath(r'JP\exported')    # 导出的目录
@@ -115,7 +115,7 @@ def linear_interpolation(final):
     exportpath = os.path.join(exportDir, exportfilename)  # 插值文件的路径，给pd输出
 
     result = {}
-    for filename in os.listdir(absWorkingDir):
+    for filename in os.listdir(workingDir):
         if filename.endswith('.csv'):
             cordinate = cordinatepattern.findall(filename)
             x, y = cordinate[0]  # 获取坐标, 这里的x和y是字符串类型
@@ -127,18 +127,13 @@ def linear_interpolation(final):
             rawdata = pd.read_csv(filepath, names=list('abcdefghijklmnopqrstuvwxyz')) # 读入数据
 
             data1 = getdata1(rawdata)  # 提取Id vs. Vg@Vd=5V的测试数据，此数据暂不需要插值
+            data2 = getdata2(rawdata)  # 提取Initial Id vs. Vg@Vd=0.1V的测试数据
+            data3 = getdata3(rawdata)  # 提取Id vs. Vs@Vd=29V的测试数据,用log()
             #data1.to_excel(originfile_exportpath, sheet_name='Sheet1')
             with pd.ExcelWriter(originfile_exportpath) as writer:  # doctest: +SKIP
-                data1.to_excel(writer, sheet_name='Sheet_name_1')
-                data2.to_excel(writer, sheet_name='Sheet_name_2')
-                data3.to_excel(writer, sheet_name='Sheet_name_3')
-
-
-            #data2 = getdata2(rawdata)  # 提取Initial Id vs. Vg@Vd=0.1V的测试数据
-            #data2.to_excel(originfile_exportpath, sheet_name='Sheet2')
-
-            #data3 = getdata3(rawdata)  # 提取Id vs. Vs@Vd=29V的测试数据,用log()
-            #data3.to_excel(originfile_exportpath, sheet_name='Sheet3')
+                data1.to_excel(writer, sheet_name='Id vs. Vg@Vd=5V')
+                data2.to_excel(writer, sheet_name='Initial Id vs. Vg@Vd=0.1V')
+                data3.to_excel(writer, sheet_name='Id vs. Vs@Vd=29V')
 
             Vg_target = linear_interpolation(data2) # 插值得到Vg
             Vs_target = log_interpolation(data3)    # 插值得到Vs
@@ -147,8 +142,9 @@ def linear_interpolation(final):
             result[key] = li
             
     df = DataFrame(result, columns=result.keys(), index=['Vg_target', 'Vs_target']).T
-    df.to_excel(exportpath)     # 导出插值结果   
-    
+    df.to_excel(exportpath)     # 导出插值结果
+
+
     
     
     

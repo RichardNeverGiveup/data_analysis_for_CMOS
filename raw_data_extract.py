@@ -101,6 +101,6 @@ def concate_data(workingdir):
         dummyVd01.to_excel(writer, sheet_name=testnames[3])
         test_cond_pure.to_excel(writer, sheet_name='test_description')
 
-                  
-rename_data(r"C:\Users\E905825\notebook\JP\A02E461#21")
-concate_data(r"C:\Users\E905825\notebook\JP\A02E461#21")
+if __name__ == '__main__':                  
+    rename_data(r"C:\Users\E905825\notebook\JP\A02E461#21")
+    concate_data(r"C:\Users\E905825\notebook\JP\A02E461#21")

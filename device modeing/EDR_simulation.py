@@ -18,8 +18,8 @@
 #2020/08/30     v2         1)add user input function for different vbb
 #
 #
-#2020/09/01     v3		   1)reconstructed the final output data structure
-#						   2)builid work flow with another data extraction script
+#2020/09/01     v3         1)reconstructed the final output data structure
+#			   2)builid work flow with another data extraction script
 #                          -------by Ruilin
 #******************update history end******************#
 

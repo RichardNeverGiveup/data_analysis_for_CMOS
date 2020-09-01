@@ -15,7 +15,12 @@
 #                          3)extend corner number to simulate all corners 
 # 
 # 
-#2020/08/30     v2         add user input function for different vbb -------by Ruilin
+#2020/08/30     v2         1)add user input function for different vbb
+#
+#
+#2020/09/01     v3		   1)reconstructed the final output data structure
+#						   2)builid work flow with another data extraction script
+#                          -------by Ruilin
 #******************update history end******************#
 
 
@@ -29,56 +34,59 @@ ls = os.linesep
 
 #******************input information******************#
 corner_TT = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_FF = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" fast_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" fast_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_SS = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" slow_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" slow_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_FS = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" fnsp_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" fnsp_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_SF = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" snfp_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" snfp_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_FFG = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" fast_g_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" fast_g_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_SSG = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" slow_g_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" slow_g_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_FSG = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" fnsp_g_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" fnsp_g_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
 corner_SFG = """
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" presim
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" snfp_g_llv
-.lib "/home/yukang/case/3D_NAND/LUS/v0p5_hf1/model/v0.5_hf1_202006/lib/cs501.lib" typ_diode
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" presim
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" snfp_g_llv
+.lib "./WYS_V0.5_20200731/lib/cs501_lib" typ_diode
 """
+
+
 corner = [corner_TT,corner_FF,corner_SS,corner_FS,corner_SF,corner_FFG,corner_SSG,corner_FSG,corner_SFG] #add the corner above
 cornerName = ["TT","FF","SS","FS","SF","FFG","SSG","FSG","SFG"] #Arbitrary name but should match above corner
+
 T = 25
 modelType = "S" # "S" or "C"
 MN = "lvnemos4_1p2_lvpw"
-CMP = ".xm0.m0" #core model path of subckt model
+CMP = ".m1" #core model path of subckt model
 polarity= "N"
 nodeNO = 4 # only for subckt model
 icon = 4e-8 # no sign
@@ -92,9 +100,6 @@ cgg_size = "10/10/1" # "w(um)/l(um)/m"
 device_size = ["10/10/0.23","10/0.08/0.23","1/0.08/0.23","0.6/0.08/0.23","0.4/0.08/0.23","0.3/0.08/0.23"] # "w(um)/l(um)/sa(um)"
 #device_size = ["10/10/0.23"] # "w(um)/l(um)/sa(um)"
 
-
-# specList = ["vtscc_"+MN,"vtlcc_"+MN,"vtbcc_"+MN,"idsat_"+MN,"idlin_"+MN,"ioff_"+MN]
-#specList = ["cgg_"+MN,"vtlgm_"+MN,"vtsgm_"+MN,"vtbgm_"+MN,"vtlcc_"+MN,"vtscc_"+MN,"vtbcc_"+MN,"idsat_"+MN,"idlin_"+MN,"ioff_"+MN]
 #******************input information end******************#
 
 addNode = (nodeNO - 4) * ' 0'
@@ -106,8 +111,6 @@ options = ".options probe brief=1 nomod post ingold=2 dccap=1 numdgt=5 list"
 temp = ".temp %d"%T
 end = os.linesep + ".end" + os.linesep
 #******************netlist component end******************#
-
-
 
 #******************spec function for compact model******************#
 def cggC(NO,mdl,vcgg,size_cgg):
@@ -363,79 +366,28 @@ Vd%02d06 d%02d06 0 %s
     return specIoffSNet
 #******************spec function for subckt model end******************#
 
-
-
-#******************simulation spec pick function******************#
-def specSim(listFileList,device_size,specList):
-    specValueList = []
-    specTable = ''
-    specNO = 0
-    cornerFormat0 = "%-13s" * cornerNO
-    cornerFormat = cornerFormat0%tuple(cornerName)
-    for eachFile in listFileList:
-        for eachSpec in specList:
-            with open(eachFile,'r') as f2:
-                for eachLine in f2:
-                    if eachSpec+'=' in eachLine:
-                        if 'at=' in eachLine:
-                            specValueList.append(eachLine.split('at=')[0].split('=')[1].strip())
-                        else:
-                            specValueList.append(eachLine.split('=')[1].strip())
-    #print specValueList
-    #for eachSize in device_size:
-        #specNO = 0
-       # specTable += ls
-        #specTable += ("%-28s%-13s%-13s%-13s"%("w/l/sa="+eachSize,'TT','FF','SS') + ls)
-        #for eachSpec2 in specList:
-           # specTable += ("%-28s%-13s%-13s%-13s"%(eachSpec2,specValueList[3*len(specList)*sizeNO+specNO],\
-#specValueList[(3*sizeNO+1)*len(specList)+specNO],specValueList[(3*sizeNO+2)*len(specList)+specNO]) + ls)
-           # specNO += 1 
-        #sizeNO += 1
-
-    for eachSpec2 in specList:
-        sizeNO = 0
-        specTable += ls
-        specTable += ("%-28s%s"%(eachSpec2,cornerFormat) + ls)
-
-        for eachSize in device_size: 
-            specValue = [] 
-            for k in range(cornerNO):
-                specValue.append(specValueList[sizeNO*cornerNO*len(specList)+k*len(specList)+specNO])
-            specFormat = cornerFormat0%tuple(specValue)
-            specTable += ("%-28s%s"%("w/l/sa="+eachSize,specFormat) + ls)
-            sizeNO += 1
-        specNO += 1
-
-
-    return specTable
-#******************simulation spec pick function end******************#
-
-
-
 def main():
-
-    Vbb = raw_input("请输入你要仿真的Vbb值,用英文逗号分隔,如-1.5,-2.5,-3.5,-4.5\n")
+    Vbb = raw_input("please input Vbb for simulation,use English comma as seperator, eg:-1.5,-2.5,-3.5,-4.5\n")
+    #Vbb = input("please input Vbb for simulation,use English comma as seperator, eg:-1.5,-2.5,-3.5,-4.5\n")
+    
     Vbb_li = Vbb.split(',')   # get a list of Vbb like ['1.0', '1.1', '1.2', '1.3']
 
-    # the following four lines defined the vtbcc, maybe need user input to configure
-    temp_li = []     
+    # the following lines help us get the specList according to the input by user
+    temp_li_gm = []
+    temp_li_cc = []     
     for i in range(len(Vbb_li)):
-        temp_li.append("vtbcc_"+str(i)+MN)
-    specList = ["vtscc_"+MN,"vtlcc_"+MN] + temp_li + ["idsat_"+MN,"idlin_"+MN,"ioff_"+MN]
-    # specList = ["vtscc_"+MN,"vtlcc_"+MN,"vtbcc_"+MN,"idsat_"+MN,"idlin_"+MN,"ioff_"+MN]   # 这里要和输入的VTB个数一样
+        magic_number = 50+i
+        temp_li_gm.append("vtbgm"+str(magic_number)+"_"+MN)  # 得到vtbgm50_lvnemos4_1p2_lvpw
+        temp_li_cc.append("vtbcc"+str(magic_number)+"_"+MN)
+    specList = ["cgg_"+MN,"vtlgm_"+MN,"vtsgm_"+MN,"vtlcc_"+MN,"vtscc_"+MN,"idsat_"+MN,"idlin_"+MN,"ioff_"+MN] + temp_li_gm + temp_li_cc
 
 
-
-    iNO = 0
-    listFileList = []
-    delFile = "rm *.ms* *.sw* *.st* *.pa* *.lis"
     for i in device_size:
-        jNO = 0
-        iNO += 1
         if modelType == "S":
             cggNetlist = cggS(1,MN,vcgg,cgg_size)
             linNetlist = specLinS(1,MN,polarity,vgg,i)
             satNetlist = specSatS(1,MN,polarity,vdd,vgg,i)
+            ioffNetlist = specIoffS(1,MN,polarity,vdoff,i)
 
             vtbNetlist = ''
             for sq in range(len(Vbb_li)):   # i is used, we should not use i to iterate
@@ -443,14 +395,11 @@ def main():
                 result_vb_netlist = specVtbS(1,MN,polarity,vgg,vbb,i,sq) + ls # sq is the sequence number user typed in.
                 vtbNetlist += result_vb_netlist
 
-
-            # vtbNetlist = specVtbS(1,MN,polarity,vgg,vbb,i)
-            ioffNetlist = specIoffS(1,MN,polarity,vdoff,i)
-
         elif modelType == "C":
             cggNetlist = cggC(1,MN,vcgg,cgg_size)
             linNetlist = specLinC(1,MN,polarity,vgg,i)
             satNetlist = specSatC(1,MN,polarity,vdd,vgg,i)
+            ioffNetlist = specIoffC(1,MN,polarity,vdoff,i)
 
             vtbNetlist = ''
             for sq in range(len(Vbb_li)):
@@ -458,29 +407,61 @@ def main():
                 result_vb_netlist = specVtbC(1,MN,polarity,vgg,vbb,i,sq) + ls
                 vtbNetlist += result_vb_netlist
 
-            ioffNetlist = specIoffC(1,MN,polarity,vdoff,i)
+        netlist2 = cggNetlist + linNetlist + satNetlist + vtbNetlist + ioffNetlist    
 
-        netlist2 = cggNetlist + linNetlist + satNetlist + vtbNetlist + ioffNetlist
-
+        corner_index = 0
         for j in corner:
-            netlist1 = title + ls*2 + options + ls + j + ls + temp + ls*2
+            netlist1 = title + ls*2 + options + ls + j + ls + temp + ls*2   #这里的j对应着每一个corner
             netlist = netlist1 + netlist2 + end
-            netlistFile = "EDR_hspice.sp"
-            #netlistFile_cc = "EDR_hspice_size%d_%s.sp"%(iNO,cornerName[jNO])
-            #with open(netlistFile_cc,'w') as f8:
-                #f8.write(netlist)
-            with open(netlistFile,'w') as f1:
-                f1.write(netlist)
-            listFile = "EDR_size%d_%s.lis"%(iNO,cornerName[jNO])
-            listFileList.append(listFile)
+            cornertitle = cornerName[corner_index]  # 这会给我们一个“TT”, "SS"之类的字符串
+            # i is the device size, like "10/10/0.23", so i.replace('/','_') can get "10_10_0.23"
+            size_for_filename = i.replace('/','_')
+            netlistFile = "EDR_hspice_%s_%s.sp"%(size_for_filename,cornertitle)  #this will generate a series of netlist
+            with open(netlistFile, 'w') as file:
+                file.write(netlist)
+
+            listFile = "EDR_%s_%s.lis"%(size_for_filename,cornertitle)
             cmd = "hspice " + netlistFile + " > " + listFile
             os.system(cmd)
-            jNO += 1
-    with open("EDR_result_hspice",'w') as f3:
-        f3.write(specSim(listFileList,device_size,specList))
+
+            corner_index += 1
+    delFile = "rm *.ms* *.sw* *.st* *.pa*"
     os.system(delFile)
+
+    DICT = {}
+    for file in os.listdir('.'):
+        if file.endswith('.lis'):
+		    size = '_'.join(file.split('_')[1:3])
+		    corner_na = file.split('_')[-1][0:-4]
+		    KEY = size + '_' + corner_na
+		    
+		    LIST = []
+		    with open(file) as f:
+		        
+		        for eachline in f:
+		            for eachspec in specList:
+		                if eachspec + '=' in eachline:
+		                    if 'at=' in eachline:
+		                        value = eachline.split('at=')[0].split('=')[1].strip()
+		                    else:
+		                        value = eachline.split('=')[1].strip()
+		                    
+		                    VALUE = eachspec.split('_')[0] + '='+ value
+		                    LIST.append(VALUE)
+		    DICT[KEY] = LIST
+	with open('EDR_result.txt', 'w') as f:
+		for k in DICT:
+			f.write(k)
+			f.write(ls)
+			for i in DICT[k]:
+				f.write(i)
+				f.write(',')	
+			f.write(ls)
 
 
 if __name__ == "__main__":
     main()
+
+
+
 

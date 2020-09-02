@@ -37,5 +37,43 @@ for i in items:
     corner_sequences.append(corner)
 ###################################################################################
 ##################build the df#####################################################
-DataFrame(row,columns=columns,index=[size_sequences,corner_sequences]).sort_index(level=0)
+final = DataFrame(row,columns=columns,index=[size_sequences,corner_sequences]).sort_index(level=0)
+final.index.names = ['size','corner']
+final.columns.names = ['params']
 ###################################################################################
+###############bulid and sort the params list for gm and cc###################################
+vtbcc_li = []
+vtbgm_li = []
+for i in final.columns:
+    if i.startswith('vtbcc'):
+        vtbcc_li.append(i)
+    elif i.startswith('vtbgm'):
+        vtbgm_li.append(i)
+
+gm_li = ['cgg', 'vtlgm', 'idlin','vtsgm', 'idsat', 'ioff'] + vtbgm_li
+cc_li = ['cgg', 'vtlcc', 'idlin','vtscc', 'idsat', 'ioff'] + vtbcc_li
+gm_li.sort()
+cc_li.sort()  # out put is ['cgg','idlin','idsat','ioff','vtbcc50', ...,'vtbcc55','vtbcc56','vtlcc','vtscc']
+#######################################################################################################
+########################get a standard form pivot####################################################
+# reindex(columns=['FF','FS','FFG','FSG','TT','SFG','SSG','SF','SS']) for v
+# reindex(columns=['SS','SF','SSG','SFG','TT','FSG','FFG','FS','FF']) for i
+standard_pivot = final.unstack().stack(0).swaplevel(0,1).sort_index(level=0)
+#######################################################################################################
+icc_pivot = standard_pivot.loc[cc_li[0:4]].reindex(columns=['SS','SF','SSG','SFG','TT','FSG','FFG','FS','FF'])
+igm_pivot = standard_pivot.loc[gm_li[0:4]].reindex(columns=['SS','SF','SSG','SFG','TT','FSG','FFG','FS','FF'])
+vcc_pivot = standard_pivot.loc[cc_li[4:]].reindex(columns=['FF','FS','FFG','FSG','TT','SFG','SSG','SF','SS'])
+vgm_pivot = standard_pivot.loc[gm_li[4:]].reindex(columns=['FF','FS','FFG','FSG','TT','SFG','SSG','SF','SS'])
+#######################################################################################################
+flag = input("Please input the mode you want, eg: input 'cc' or 'gm' \n")
+
+if flag == 'cc':
+    with pd.ExcelWriter('CC_result.xlsx') as writer:  
+        icc_pivot.to_excel(writer, sheet_name="Current-Related")
+        vcc_pivot.to_excel(writer, sheet_name="Vcc-Related")
+if flag == 'gm':
+    with pd.ExcelWriter('GM_result.xlsx') as writer:  
+        icc_pivot.to_excel(writer, sheet_name="Current-Related")
+        vcc_pivot.to_excel(writer, sheet_name="Vgm-Related")
+
+#######################################################################################################

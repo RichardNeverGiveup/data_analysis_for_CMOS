@@ -72,13 +72,13 @@ cc_li.sort()  # out put is ['cgg','idlin','idsat','ioff','vtbcc50', ...,'vtbcc55
 # reindex(columns=['SS','SF','SSG','SFG','TT','FSG','FFG','FS','FF']) for i
 standard_pivot = final.unstack().stack(0).swaplevel(0,1).sort_index(level=0)
 #######################################################################################################
-if np.float(standard_pivot.loc['idsat']['TT'][0]) > 0: # 随便取了第一个TT的IDSAT判断正负，负的就是pmos
+if np.float(standard_pivot.loc['idsat']['TT'][0]) > 0: # 随便取了第一个TT的IDSAT判断正负，正的就是nmos
+    order_of_i = ['SS', 'SF', 'SSG', 'SFG', 'TT', 'FSG', 'FFG', 'FS', 'FF']
+    order_of_v = ['FF', 'FS', 'FFG', 'FSG', 'TT', 'SFG', 'SSG', 'SF', 'SS']    
+    
+if np.float(standard_pivot.loc['idsat']['TT'][0]) < 0: # 随便取了第一个TT的IDSAT判断正负，负的就是pmos    
     order_of_i = ['SS', 'FS', 'SSG', 'FSG', 'TT', 'SFG', 'FFG', 'SF', 'FF']
     order_of_v = ['FF', 'SF', 'FFG', 'SFG', 'TT', 'FSG', 'SSG', 'FS', 'SS']
-if np.float(standard_pivot.loc['idsat']['TT'][0]) < 0: # 随便取了第一个TT的IDSAT判断正负，负的就是pmos
-    order_of_i = ['SS', 'SF', 'SSG', 'SFG', 'TT', 'FSG', 'FFG', 'FS', 'FF']
-    order_of_v = ['FF', 'FS', 'FFG', 'FSG', 'TT', 'SFG', 'SSG', 'SF', 'SS']
-
 
 icc_pivot = standard_pivot.loc[cc_li[0:4]].reindex(columns=order_of_i)
 igm_pivot = standard_pivot.loc[gm_li[0:4]].reindex(columns=order_of_i)

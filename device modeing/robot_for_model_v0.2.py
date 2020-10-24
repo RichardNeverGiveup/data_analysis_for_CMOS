@@ -5,11 +5,16 @@
 
 
 import re
+#*******************************************************
+#Author: Ruilin Cheng, David Zhu.
+#*******************************************************
+#
 # user input: 
 # MOSNAME eg: lvnemos4_1p2_lvpw
 # PARAM_MARK eg:  _ne_1p2
-# MOSNAME = 'lvnemos4_1p2_lvpw'
-# PARAM_MARK = '_ne_1p2'
+# LIB_FILENAME = '501per_35_VcA.lib'   
+# MDL_FILENAME = '501per_35_VcA.mdl'
+#********************************************************
 MOSNAME = 'lvpemos4_1p2_lvnw'
 PARAM_MARK = '_pe_1p2'
 LIB_FILENAME = '501per_35_VcA.lib'   # 这里需要自己改一下lib和mdl的文件名作为路径。测试阶段先取这个方式来打开文件。

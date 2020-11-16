@@ -103,7 +103,7 @@ def get_matched_start_end_in_totallib(TOTAL_LIB_FILENAME, cornerName, mostype):
     f_total = open(TOTAL_LIB_FILENAME).readlines()
 
     # reg_content = "\+.*?" + "_ne_3p3" # mostype  #测试用_ne_3p3，_lvp_pb，_zc是mostype
-    reg_content = "\+.*?" + mostype + "\s*="   #************ mostype 是一个输入
+    reg_content = "\+.*?" + mostype + "\s*="   #************ mostype 是一个输入，用结尾的空格和等号来进一步判断。
     startmark_foronetypemos_incorner = re.compile(reg_content)  # 这个_ne_3p3后续可替换
     # startmark_foronetypemos_incorner = re.compile(r"\+.*?_ne_3p3")  # 这个_ne_3p3后续可替换
     # startmark_foronetypemos_incorner = re.compile(r"\+.*?_pe_3p3")  # 这个_ne_3p3后续可替换

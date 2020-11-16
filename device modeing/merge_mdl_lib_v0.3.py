@@ -103,7 +103,7 @@ def get_matched_start_end_in_totallib(TOTAL_LIB_FILENAME, cornerName, mostype):
     f_total = open(TOTAL_LIB_FILENAME).readlines()
 
     # reg_content = "\+.*?" + "_ne_3p3" # mostype  #测试用_ne_3p3，_lvp_pb，_zc是mostype
-    reg_content = "\+.*?" + mostype   #************ mostype 是一个输入
+    reg_content = "\+.*?" + mostype + "\s*="   #************ mostype 是一个输入
     startmark_foronetypemos_incorner = re.compile(reg_content)  # 这个_ne_3p3后续可替换
     # startmark_foronetypemos_incorner = re.compile(r"\+.*?_ne_3p3")  # 这个_ne_3p3后续可替换
     # startmark_foronetypemos_incorner = re.compile(r"\+.*?_pe_3p3")  # 这个_ne_3p3后续可替换
@@ -171,7 +171,7 @@ def get_matched_start_end_in_totallib_input_f_total_version(f_total, TOTAL_LIB_F
 #     f_total = open(TOTAL_LIB_FILENAME).readlines()
 
     # reg_content = "\+.*?" + "_ne_3p3" # mostype  #测试用_ne_3p3，_lvp_pb，_zc是mostype
-    reg_content = "\+.*?" + mostype   #************ mostype 是一个输入
+    reg_content = "\+.*?" + mostype + "\s*="   #************ mostype 是一个输入
     startmark_foronetypemos_incorner = re.compile(reg_content)  # 这个_ne_3p3后续可替换
 
 
@@ -289,10 +289,10 @@ def get_totalfile_linenumber_for_substitution(LIB_FILENAME,TOTAL_LIB_FILENAME):
     MOSNAME = LIB_FILENAME.split('.')[0]
     TOTAL_MDL_FILENAME = TOTAL_LIB_FILENAME.split('.')[0] + '.mdl'
 
-    content_temp_start = '.subckt\s*' + MOSNAME
+    content_temp_start = '.subckt\s*' + MOSNAME + "\s"
     regex_temp_start = re.compile(content_temp_start)
 
-    content_temp_end = '.ends\s*' + MOSNAME
+    content_temp_end = '.ends\s*' + MOSNAME + "\s"
     regex_temp_end = re.compile(content_temp_end)
 
     f_mdl = open(TOTAL_MDL_FILENAME).readlines()
@@ -426,7 +426,7 @@ def get_cf_replaced_small_lib_for_totalMDL(LIB_FILENAME):
         if p_for_cf.search(line):
             cf = p_for_cf.findall(line)[0]
             cf_value = cf.split('=')[1]
-            newcf = 'cf = 0 + ' + cf_value + '*pre_layout_sw'
+            newcf = "cf = '0 + " + cf_value + "*pre_layout_sw'"
             newline = line.replace(cf, newcf)
             cf_replaced_small_lib.append(newline)
             continue    # 少写了这个致命的continue！！！！

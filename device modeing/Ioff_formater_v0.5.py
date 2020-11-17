@@ -4,6 +4,13 @@
 # In[1]:
 
 
+############configure the corresponding corner sequences here, you should match you simulation corners in the Simulator script#################################################
+###############################################################################################################################################################################
+
+order_for_nmos = ['SS', 'SF', 'SSG', 'SFG', 'TT', 'FSG', 'FFG', 'FS', 'FF']
+order_for_pmos = ['SS', 'FS', 'SSG', 'FSG', 'TT', 'SFG', 'FFG', 'SF', 'FF']
+##############################################################################################################
+
 import pandas as pd
 import numpy as np
 from pandas import DataFrame, Series
@@ -46,10 +53,10 @@ df = DataFrame(valuelist,columns=["Ioff"],index=[temperaturelist,sizelistW,sizel
 df.index.names = ['temp','sizeW','sizeL','corner']
 
 
-if np.float(df['Ioff'][0]) > 0: # if Ioff > 0, this data is nmos
-    order_of_i = ['SS', 'SF', 'SSG', 'SFG', 'TT', 'FSG', 'FFG', 'FS', 'FF']
+if np.float(df['Ioff'][0]) > 0: # 随便取了第一个TT的IDSAT判断正负，正的就是nmos
+    order_of_i = order_for_nmos
 if np.float(df['Ioff'][0]) < 0:
-    order_of_i = ['SS', 'FS', 'SSG', 'FSG', 'TT', 'SFG', 'FFG', 'SF', 'FF']
+    order_of_i = order_for_pmos
 # df.unstack('corner')
 
 final = df.unstack('corner').sort_values(by=['temp', 'sizeW', 'sizeL'], ascending=False)

@@ -60,6 +60,7 @@ cornerName = ["TT","FF","SS","FS","SF","FFG","SSG","FSG","SFG"] #Arbitrary name 
 
 # T = 25
 temp_li = [25, 90, 100]  # 尝试支持多个温度下的IOFF
+Vs = "-1"  # support Vs configure
 
 modelType = "S" # "S" or "C"
 MN = "lvnemos4_1p2_lvpw"
@@ -106,11 +107,11 @@ def specIoffC(NO,mdl,mType,vdoff,size):
         lodSize = ""
     specIoffCNet = """
 
-m%s06 d%02d06 0 0 0 %s w=%su l=%su %s
+m%s06 d%02d06 0 %s 0 %s w=%su l=%su %s
 Vd%02d06 d%02d06 0 %s
 .dc Vd%02d06 0 %s %s
 .meas dc ioff_%s find I(m%s06) when V(d%02d06,0)=%s
-"""%(mdl,NO,mdl,w,l,lodSize,NO,NO,vdoff,NO,vdoff,step,mdl,mdl,NO,vdoff)
+"""%(mdl,NO, Vs, mdl,w,l,lodSize,NO,NO,vdoff,NO,vdoff,step,mdl,mdl,NO,vdoff)
     return specIoffCNet
 #******************spec function for compact model end******************#
 
@@ -133,11 +134,11 @@ def specIoffS(NO,mdl,mType,vdoff,size):
         lodSize = ""
     specIoffSNet = """
 
-x%s06 d%02d06 0 0 0%s %s w=%su l=%su %s
+x%s06 d%02d06 0 %s 0%s %s w=%su l=%su %s
 Vd%02d06 d%02d06 0 %s
 .dc Vd%02d06 0 %s %s
 .meas dc ioff_%s find I(x%s06%s) when V(d%02d06,0)=%s
-"""%(mdl,NO,addNode,mdl,w,l,lodSize,NO,NO,vdoff,NO,vdoff,step,mdl,mdl,CMP,NO,vdoff)
+"""%(mdl,NO,Vs,addNode,mdl,w,l,lodSize,NO,NO,vdoff,NO,vdoff,step,mdl,mdl,CMP,NO,vdoff)
     return specIoffSNet
 #******************spec function for subckt model end******************#
 

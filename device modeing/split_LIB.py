@@ -65,7 +65,7 @@ def get_dict_of_single_mostype_dict_of_lib(corner_param_dict):
     return single_mostype_corner_param_dict
 
 
-# In[154]:
+# In[4]:
 
 
 def get_final_lib_part(MOSNAME, single_mostype_corner_param_dict):
@@ -87,14 +87,14 @@ def get_final_lib_part(MOSNAME, single_mostype_corner_param_dict):
     return final_lib_part
 
 
-# In[4]:
+# In[5]:
 
 
 corner_param_dict = get_dict_of_lib(LIB_FILENAME)
 get_dict_of_single_mostype_dict_of_lib(corner_param_dict)
 
 
-# In[5]:
+# In[6]:
 
 
 def get_blank_striped_mdl(MDL_FILENAME, MOSNAME):
@@ -140,7 +140,7 @@ def get_blank_striped_mdl(MDL_FILENAME, MOSNAME):
     return blank_striped_mdl_content
 
 
-# In[107]:
+# In[7]:
 
 
 def clean_all_mis_in_one_line(line):
@@ -164,7 +164,7 @@ def clean_all_mis_in_one_line(line):
     return line
 
 
-# In[141]:
+# In[8]:
 
 
 ####################测试去除每行中MIS的代码####################################################################################
@@ -193,7 +193,7 @@ def clean_all_mis_in_one_line(line):
 ##################################################################################################################################
 
 
-# In[111]:
+# In[9]:
 
 
 def get_mis_cleaned_mdl(raw_mdl):
@@ -205,7 +205,29 @@ def get_mis_cleaned_mdl(raw_mdl):
     return mis_cleaned_mdl
 
 
-# In[139]:
+# In[10]:
+
+
+# #########测试cf去除效果################################################################################################
+# #######################################################################################################################
+# line = "+cf = '0 + 4.5E-11*pre_layout_sw'                  clc = 1E-7                    cle = 0.6"
+# line = "+clc = 1E-7         cle = 0.6           cf = '0 + 4.5E-11*pre_layout_sw'"
+# line = "+clc = 1E-7         cf = '0 + 4.5E-11*pre_layout_sw          cle = 0.6 '"
+
+# print(line)
+# startof_cf = line.find('cf')
+# startof_pre = line.find("*pre_layout_sw")
+# startof_equal = line[:startof_pre].rfind('=')
+# startof_plus = line[:startof_pre].rfind('+')
+
+# for_replacement = "=" + line[startof_plus:startof_pre].replace('+',"").strip()  # 得到 '=4.5E-11'
+# orginal = line[startof_equal:startof_pre+len("*pre_layout_sw'")]  # 得到 "= '0 + 4.5E-11*pre_layout_sw'" 
+# line = line.replace(orginal, for_replacement)
+# print(line)
+# #######################################################################################################################
+
+
+# In[11]:
 
 
 def get_cf_cleaned_mdl(mis_cleaned_mdl):
@@ -215,17 +237,19 @@ def get_cf_cleaned_mdl(mis_cleaned_mdl):
             print(line)
             startof_cf = line.find('cf')
             startof_pre = line.find("*pre_layout_sw")
-            startof_equal = line.find('=')
-            startof_plus = line[startof_cf:startof_pre].find('+')
+            startof_equal = line[:startof_pre].rfind('=')
+            startof_plus = line[:startof_pre].rfind('+')
+
             for_replacement = "=" + line[startof_plus:startof_pre].replace('+',"").strip()  # 得到 '=4.5E-11'
             orginal = line[startof_equal:startof_pre+len("*pre_layout_sw'")]  # 得到 "= '0 + 4.5E-11*pre_layout_sw'" 
             line = line.replace(orginal, for_replacement)
             print(line)
         cf_cleaned_mdl.append(line)
+    cf_cleaned_mdl = cf_cleaned_mdl[:-1]       # 去掉最后一个 .ends lvnemos4_1p2_lvpw
     return cf_cleaned_mdl
 
 
-# In[142]:
+# In[12]:
 
 
 ############用于测试替换cf的代码################################################################################################
@@ -242,7 +266,7 @@ def get_cf_cleaned_mdl(mis_cleaned_mdl):
 ##################################################################################################################################
 
 
-# In[143]:
+# In[13]:
 
 
 def get_allparams_cleaned_mdl(mydata):
@@ -260,11 +284,11 @@ def get_allparams_cleaned_mdl(mydata):
     #     print(pattern.sub(r'\1', line))
         line = pattern.sub(r'\1', line)
         without_all_params.append(line)
-        
+    without_all_params = without_all_params[:-1]   # 去掉最后一个 .ends lvnemos4_1p2_lvpw
     return without_all_params
 
 
-# In[161]:
+# In[14]:
 
 
 def get_final_lib(final_lib_part, cf_cleaned_mdl):
@@ -279,7 +303,7 @@ def get_final_lib(final_lib_part, cf_cleaned_mdl):
     return final_lib
 
 
-# In[162]:
+# In[15]:
 
 
 ###########处理LIB的部分#########################################################################
@@ -303,4 +327,6 @@ with open(libfilename, mode='w') as f:
 with open(pmfilename, mode='w') as f:
     for line in allparams_cleaned_mdl:
         f.writelines(line)
-input("按任意键退出！")
+
+input("输入任意键退出！")
+

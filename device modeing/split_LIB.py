@@ -12,10 +12,10 @@ import re
 # LIB_FILENAME = '501per_35_VcA.lib'   
 # MDL_FILENAME = '501per_35_VcA.mdl'
 #********************************************************
-MOSNAME = 'lvnemos4_1p2_lvpw'
-MOSTYPE = '_ne_1p2'
-LIB_FILENAME = '501per_35_VcA.lib'   # 这里需要自己改一下lib和mdl的文件名作为路径。测试阶段先取这个方式来打开文件。
-MDL_FILENAME = '501per_35_VcA.mdl'
+MOSNAME = '_llv_rvtp'
+MOSTYPE = '_llv_rvtp'
+LIB_FILENAME = 'trident_1d2_mos.lib'   # 这里需要自己改一下lib和mdl的文件名作为路径。测试阶段先取这个方式来打开文件。
+MDL_FILENAME = 'trident_1d2_mos.mdl'
 
 
 # In[2]:
@@ -27,8 +27,9 @@ def get_dict_of_lib(LIB_FILENAME):
 
     for line_number, line in enumerate(f):
         if ".lib statistical_mc" in line:
-            end_of_corners_in_lib = line_number
-
+            end_of_corners_in_lib = line_number        
+    print("初步定位到总LIB的第%d行之前的内容为LIB需要分裂出的内容。"%end_of_corners_in_lib)
+    
     list_of_corners_star2end_tuples = []
     for line_number, line in enumerate(f[:end_of_corners_in_lib]):
         if ".lib" in line:
@@ -42,6 +43,8 @@ def get_dict_of_lib(LIB_FILENAME):
         key = f[t[0]].split()[1] # tt_llv_corner  as key
         value = f[t[0]:t[1]+1]
         corner_param_dict[key] = value
+        print("%s已经存入字典，其内容对应行号为%d到%d"%(key, t[0], t[1]))
+        
     return corner_param_dict
 
 
@@ -55,6 +58,7 @@ def get_dict_of_single_mostype_dict_of_lib(corner_param_dict):
     mark_foronetypemos_incorner = re.compile(reg_content)
 
     single_mostype_corner_param_dict = {}
+    print("和你输入的MOSTYPE匹配的每个CORNER的首行和尾行如下！")
     for k in corner_param_dict:
         v = corner_param_dict[k]
         new_v = []
@@ -62,6 +66,9 @@ def get_dict_of_single_mostype_dict_of_lib(corner_param_dict):
             if mark_foronetypemos_incorner.search(line):
                 new_v.append(line)
         single_mostype_corner_param_dict[k] = new_v
+        
+        print(new_v[0], new_v[-1])
+    print("********************************************************************************************************")
     return single_mostype_corner_param_dict
 
 
@@ -90,8 +97,8 @@ def get_final_lib_part(MOSNAME, single_mostype_corner_param_dict):
 # In[5]:
 
 
-corner_param_dict = get_dict_of_lib(LIB_FILENAME)
-get_dict_of_single_mostype_dict_of_lib(corner_param_dict)
+#corner_param_dict = get_dict_of_lib(LIB_FILENAME)
+#get_dict_of_single_mostype_dict_of_lib(corner_param_dict)
 
 
 # In[6]:
@@ -109,9 +116,12 @@ def get_blank_striped_mdl(MDL_FILENAME, MOSNAME):
 
     for line_number, line in enumerate(f):
         if regex_temp_start.search(line):
-            temp_start = line_number      
+            print("定位到总MDL文件的第%d行作为临时起始行"%line_number)
+            temp_start = line_number
+      
 
         if regex_temp_end.search(line):
+            print("定位到总MDL文件的第%d行作为临时终止行"%line_number)
             temp_end = line_number
             tuple_of_linenumber_for_mdl_in_use = (temp_start, temp_end)
 
@@ -126,6 +136,7 @@ def get_blank_striped_mdl(MDL_FILENAME, MOSNAME):
             mdl_content = mdl_in_use[newstart:]
             
             startlinenumberinoriginalmdl = newstart + temp_start  # '.model'在'.subckt\s*'和'.ends\s*'之间的行号
+            print("定位到总MDL文件的第%d行作为真正的起始行"%startlinenumberinoriginalmdl)
 
 
     blank_striped_mdl_content = []
@@ -135,7 +146,8 @@ def get_blank_striped_mdl(MDL_FILENAME, MOSNAME):
             continue
         blank_striped_mdl_content.append(line)
     blank_striped_mdl_content
-    print("根据你输入的%s,将从原总MDL中复制第%d行到第%d行。"%(MOSNAME, startlinenumberinoriginalmdl, temp_end))
+    print("根据你输入的MOSNAME:%s,将从原总MDL中复制第%d行到第%d行。"%(MOSNAME, startlinenumberinoriginalmdl, temp_end))
+    print("********************************************************************************************************")
 
     return blank_striped_mdl_content
 
@@ -198,10 +210,16 @@ def clean_all_mis_in_one_line(line):
 
 def get_mis_cleaned_mdl(raw_mdl):
     mis_cleaned_mdl = []
+    print("开始去除MIS参数**********************************************************************************************")
     for line in raw_mdl:
         if '_mis' in line:        
+            
+            print(line)
             line = clean_all_mis_in_one_line(line)
+            print(line)
+            
         mis_cleaned_mdl.append(line)
+    print("去除MIS参数结束**********************************************************************************************")
     return mis_cleaned_mdl
 
 
@@ -232,20 +250,27 @@ def get_mis_cleaned_mdl(raw_mdl):
 
 def get_cf_cleaned_mdl(mis_cleaned_mdl):
     cf_cleaned_mdl = []
+    print("开始去除CF参数**********************************************************************************************")
     for line in mis_cleaned_mdl:
         if "cf" in line:
+            print("替换前的行为：")
             print(line)
-            startof_cf = line.find('cf')
-            startof_pre = line.find("*pre_layout_sw")
+            startof_cf = line.rfind('cf')
+            startof_pre = line.rfind("pre_layout_sw")
             startof_equal = line[:startof_pre].rfind('=')
             startof_plus = line[:startof_pre].rfind('+')
 
-            for_replacement = "=" + line[startof_plus:startof_pre].replace('+',"").strip()  # 得到 '=4.5E-11'
-            orginal = line[startof_equal:startof_pre+len("*pre_layout_sw'")]  # 得到 "= '0 + 4.5E-11*pre_layout_sw'" 
-            line = line.replace(orginal, for_replacement)
+            for_replacement = "=" + line[startof_plus:startof_pre].replace('+',"").replace('*',"").strip()  # 得到 '=4.5E-11'
+            
+            original = line[startof_equal:startof_pre+len("pre_layout_sw'")]  # 得到 "= '0 + 4.5E-11*pre_layout_sw'" 
+            print("我们要替换CF行的表达式是%s。"%for_replacement)
+            print("原始未替换的CF对应的表达式是%s。"%original)
+            line = line.replace(original, for_replacement)
+            print("替换后的行为：")
             print(line)
         cf_cleaned_mdl.append(line)
     cf_cleaned_mdl = cf_cleaned_mdl[:-1]       # 去掉最后一个 .ends lvnemos4_1p2_lvpw
+    print("去除CF参数结束**********************************************************************************************")
     return cf_cleaned_mdl
 
 
@@ -280,11 +305,16 @@ def get_allparams_cleaned_mdl(mydata):
 
     pattern = re.compile(r"\'([-]*[0-9.E]*\-*\d*)[+-]*.*?\'")  # 这是当初为钟灿写的正则，我现在也看不太懂了。
     without_all_params = []
+    print("现在执行替换全部MDL参数的函数**************************************************************************************")
+    print("所有的含义参数的行内容如下*****************************************************************************************")
     for line in mydata:
+        if pattern.search(line):
+            print(line)
     #     print(pattern.sub(r'\1', line))
         line = pattern.sub(r'\1', line)
         without_all_params.append(line)
     without_all_params = without_all_params[:-1]   # 去掉最后一个 .ends lvnemos4_1p2_lvpw
+    print("********************************************************************************************************************")
     return without_all_params
 
 

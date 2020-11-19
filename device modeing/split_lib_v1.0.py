@@ -313,7 +313,7 @@ def get_allparams_cleaned_mdl(mydata):
     #     print(pattern.sub(r'\1', line))
         line = pattern.sub(r'\1', line)
         without_all_params.append(line)
-    without_all_params = without_all_params[:-1]   # 去掉最后一个 .ends lvnemos4_1p2_lvpw
+    #without_all_params = without_all_params[:-1]   # 去掉最后一个 .ends lvnemos4_1p2_lvpw
     print("********************************************************************************************************************")
     return without_all_params
 
@@ -344,7 +344,7 @@ final_lib_part = get_final_lib_part(MOSNAME, single_mostype_corner_param_dict)
 raw_mdl = get_blank_striped_mdl(MDL_FILENAME,MOSNAME)
 mis_cleaned_mdl = get_mis_cleaned_mdl(raw_mdl)
 cf_cleaned_mdl = get_cf_cleaned_mdl(mis_cleaned_mdl)
-allparams_cleaned_mdl = get_allparams_cleaned_mdl(raw_mdl)
+allparams_cleaned_mdl = get_allparams_cleaned_mdl(cf_cleaned_mdl)
 ############################################################################################
 final_lib = get_final_lib(final_lib_part, cf_cleaned_mdl)
 
